@@ -26,7 +26,7 @@ jobs:
           pip install "sqlalchemy[asyncio]" greenlet
 
       - name: Run Ruff Linter
-        run: ruff check .
+        run: ruff check . --fix
 
       - name: Run Mypy Type Checker
         run: mypy src
