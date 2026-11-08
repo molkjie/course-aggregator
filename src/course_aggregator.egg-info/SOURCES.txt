@@ -1,0 +1,13 @@
+README.md
+pyproject.toml
+src/course_aggregator/__init__.py
+src/course_aggregator.egg-info/PKG-INFO
+src/course_aggregator.egg-info/SOURCES.txt
+src/course_aggregator.egg-info/dependency_links.txt
+src/course_aggregator.egg-info/requires.txt
+src/course_aggregator.egg-info/top_level.txt
+src/course_aggregator/api/__init__.py
+src/course_aggregator/domain/__init__.py
+src/course_aggregator/services/__init__.py
+src/course_aggregator/sources/__init__.py
+src/course_aggregator/storage/__init__.py

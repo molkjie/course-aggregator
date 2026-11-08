@@ -1,0 +1,13 @@
+
+
+services:
+  web:
+    build: .
+    container_name: course_aggregator_app
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:///./courses.db
+    volumes:
+      - ./courses.db:/app/courses.db
+    restart: unless-stopped
