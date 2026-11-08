@@ -43,6 +43,7 @@ class GUID(TypeDecorator[UUID]):
             return value
         return UUID(str(value))
 
+
 # Таблиця зв'язку багато-до-багатьох: Course <-> Topic
 course_topics = Table(
     "course_topics",
@@ -149,5 +150,7 @@ class PlanItemModel(Base):
     __table_args__ = (
         # Вимога ТЗ: курс додається до плану користувача лише один раз
         UniqueConstraint("user_id", "course_id", name="uq_user_course_plan"),
-        CheckConstraint("progress_percent >= 0 AND progress_percent <= 100", name="chk_progress_range"),
+        CheckConstraint(
+            "progress_percent >= 0 AND progress_percent <= 100", name="chk_progress_range"
+        ),
     )

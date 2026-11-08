@@ -4,10 +4,12 @@ import asyncio
 import sys
 import time
 from uuid import uuid4
+
 from sqlalchemy import text
+
+from course_aggregator.services.plan_service import PlanService
 from course_aggregator.storage.database import async_session_factory, engine
 from course_aggregator.storage.models import CourseModel, PlatformModel
-from course_aggregator.services.plan_service import PlanService
 
 
 def test_memory_lazy_vs_eager() -> None:
@@ -64,7 +66,9 @@ async def benchmark_query_plan() -> None:
     """Отримання плану виконання пошукового запиту (EXPLAIN QUERY PLAN)."""
     async with engine.connect() as conn:
         result = await conn.execute(
-            text("EXPLAIN QUERY PLAN SELECT * FROM courses WHERE title LIKE '%Python%' AND level = 'beginner'")
+            text(
+                "EXPLAIN QUERY PLAN SELECT * FROM courses WHERE title LIKE '%Python%' AND level = 'beginner'"
+            )
         )
         print("\n[EXPLAIN QUERY PLAN]:")
         for row in result.all():

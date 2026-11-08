@@ -5,8 +5,6 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from course_aggregator.domain.models import CourseLevel, PlanStatus
-
 
 class TopicResponse(BaseModel):
     """Схема відображення теми."""
@@ -93,6 +91,7 @@ class ProblemDetail(BaseModel):
     status: int
     detail: str
     instance: str | None = None
+
 
 class UpdateNotesRequest(BaseModel):
     """Тіло запиту на зміну нотаток до курсу."""

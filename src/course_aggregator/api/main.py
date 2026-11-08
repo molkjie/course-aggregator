@@ -1,11 +1,10 @@
 """Точка входу FastAPI із підтримкою Correlation ID та RFC 9457 помилок."""
 
-import structlog
-from course_aggregator.logging_conf import setup_logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from uuid import uuid4
 
+import structlog
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 
@@ -15,10 +14,12 @@ from course_aggregator.domain.exceptions import (
     EntityNotFoundError,
     ProgressRegressionError,
 )
+from course_aggregator.logging_conf import setup_logging
 from course_aggregator.storage.database import Base, engine
 
 setup_logging()
 logger = structlog.get_logger()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
@@ -43,7 +44,11 @@ async def correlation_id_middleware(request: Request, call_next):  # type: ignor
     structlog.contextvars.clear_contextvars()
     structlog.contextvars.bind_contextvars(request_id=request_id, path=request.url.path)
 
-    logger.info("request_started", method=request.method, client=request.client.host if request.client else "unknown")
+    logger.info(
+        "request_started",
+        method=request.method,
+        client=request.client.host if request.client else "unknown",
+    )
     response = await call_next(request)
     response.headers["X-Request-ID"] = request_id
     logger.info("request_completed", status_code=response.status_code)
@@ -93,6 +98,7 @@ async def not_found_handler(request: Request, exc: EntityNotFoundError) -> JSONR
 async def health_check() -> dict[str, str]:
     """Перевірка доступності сервісу (Health Check)."""
     return {"status": "ok"}
+
 
 @app.exception_handler(Exception)
 async def generic_exception_handler(request: Request, exc: Exception) -> JSONResponse:

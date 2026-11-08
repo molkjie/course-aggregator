@@ -1,6 +1,6 @@
 import asyncio
-from logging.config import fileConfig
 import os
+from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy import pool
@@ -10,8 +10,8 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from course_aggregator.storage.database import Base
 from course_aggregator.storage.models import (  # noqa: F401
     CourseModel,
-    PlatformModel,
     PlanItemModel,
+    PlatformModel,
     TopicModel,
     course_topics,
 )

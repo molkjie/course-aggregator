@@ -27,24 +27,33 @@ async def seed_database() -> None:
         coursera = PlatformModel(
             id=uuid4(), name="Coursera", url="https://coursera.org", is_active=True
         )
-        stepik = PlatformModel(
-            id=uuid4(), name="Stepik", url="https://stepik.org", is_active=True
-        )
+        stepik = PlatformModel(id=uuid4(), name="Stepik", url="https://stepik.org", is_active=True)
         session.add_all([coursera, stepik])
         platforms = [coursera, stepik]
 
         # 2. Створюємо теми (Topics)
         topic_names = [
-            "Python", "Web Development", "Data Science", "Machine Learning",
-            "DevOps", "Cybersecurity", "Databases", "Algorithms",
-            "Mobile Development", "Cloud Computing"
+            "Python",
+            "Web Development",
+            "Data Science",
+            "Machine Learning",
+            "DevOps",
+            "Cybersecurity",
+            "Databases",
+            "Algorithms",
+            "Mobile Development",
+            "Cloud Computing",
         ]
         topic_models = [TopicModel(id=uuid4(), name=name) for name in topic_names]
         session.add_all(topic_models)
 
         # 3. Генеруємо 220 різноманітних курсів
         languages = ["ua", "en"]
-        levels = [CourseLevel.BEGINNER.value, CourseLevel.INTERMEDIATE.value, CourseLevel.ADVANCED.value]
+        levels = [
+            CourseLevel.BEGINNER.value,
+            CourseLevel.INTERMEDIATE.value,
+            CourseLevel.ADVANCED.value,
+        ]
 
         courses_count = 220
         courses: list[CourseModel] = []

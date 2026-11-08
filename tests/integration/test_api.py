@@ -1,4 +1,5 @@
 from uuid import uuid4
+
 import httpx
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -95,9 +96,11 @@ async def test_full_api_workflow(test_session: AsyncSession) -> None:
 
     app.dependency_overrides.clear()
 
+
 @pytest.mark.asyncio
 async def test_courses_search_and_filter(test_session: AsyncSession) -> None:
     """Перевірка серверної фільтрації, пошуку та пагінації курсів."""
+
     async def override_get_db_session():
         yield test_session
 

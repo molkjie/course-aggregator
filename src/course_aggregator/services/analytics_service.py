@@ -26,9 +26,7 @@ class AnalyticsService:
         """Аналітика 1: Покриття тем у плані користувача (скільки курсів з кожної теми)."""
         stmt = (
             select(PlanItemModel)
-            .options(
-                selectinload(PlanItemModel.course).selectinload(CourseModel.topics)
-            )
+            .options(selectinload(PlanItemModel.course).selectinload(CourseModel.topics))
             .where(PlanItemModel.user_id == user_id)
         )
         result = await self.session.execute(stmt)
@@ -57,13 +55,10 @@ class AnalyticsService:
 
     async def get_monthly_completion_dynamics(self, user_id: UUID) -> dict[str, int]:
         """Аналітика 3: Динаміка завершення курсів по місяцях (РРРР-ММ)."""
-        stmt = (
-            select(PlanItemModel)
-            .where(
-                PlanItemModel.user_id == user_id,
-                PlanItemModel.status == PlanStatus.COMPLETED.value,
-                PlanItemModel.completed_at.is_not(None),
-            )
+        stmt = select(PlanItemModel).where(
+            PlanItemModel.user_id == user_id,
+            PlanItemModel.status == PlanStatus.COMPLETED.value,
+            PlanItemModel.completed_at.is_not(None),
         )
         result = await self.session.execute(stmt)
         items = result.scalars().all()

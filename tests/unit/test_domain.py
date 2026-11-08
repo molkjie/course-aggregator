@@ -1,4 +1,5 @@
 from uuid import uuid4
+
 import pytest
 
 from course_aggregator.domain.exceptions import ProgressRegressionError

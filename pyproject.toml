@@ -39,8 +39,16 @@ line-length = 100
 target-version = "py312"
 
 [tool.ruff.lint]
-select = ["E", "F", "W", "I", "N", "UP", "B", "A", "C4", "SIM", "ARG"]
-ignore = ["B008"]
+select = ["E", "F", "I", "W", "UP"]
+ignore = [
+    "E501",  # ігнорувати занадто довгі рядки (корисно для лістингів і довгих SQL-запитів)
+    "B008",  # дозволити Depends(...) у параметрах функцій FastAPI
+]
+
+[tool.ruff.lint.per-file-ignores]
+"src/course_aggregator/storage/migrations/*" = ["F401", "E402"]
+"src/course_aggregator/storage/models.py" = ["F401"]
+"tests/*" = ["S101", "ARG001"]
 
 [tool.mypy]
 python_version = "3.12"

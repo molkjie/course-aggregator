@@ -3,7 +3,6 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from course_aggregator.storage.models import PlatformModel
-from course_aggregator.storage.seeder import seed_database
 
 
 @pytest.mark.asyncio

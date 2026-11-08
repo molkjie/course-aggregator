@@ -1,6 +1,7 @@
 """Інтерфейс командного рядка (CLI) для адміністрування системи."""
 
 import asyncio
+
 import typer
 from rich.console import Console
 from rich.table import Table
@@ -26,6 +27,7 @@ def seed() -> None:
 @cli_app.command("ingest")
 def ingest() -> None:
     """Запустити збір курсів із зовнішніх платформ (Coursera, Stepik)."""
+
     async def run() -> None:
         async with async_session_factory() as session:
             pipeline = CourseIngestionPipeline(session)

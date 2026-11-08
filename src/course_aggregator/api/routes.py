@@ -1,7 +1,7 @@
 """Маршрути REST API для роботи з курсами, планами та аналітикою."""
 
 from typing import Annotated
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, Header, Query, status
 from sqlalchemy import func, select
@@ -13,20 +13,13 @@ from course_aggregator.api.schemas import (
     CoursePageResponse,
     CourseResponse,
     PlanItemResponse,
-    UpdateProgressRequest,
-)
-from course_aggregator.api.schemas import (
-    AddToPlanRequest,
-    CoursePageResponse,
-    CourseResponse,
-    PlanItemResponse,
     UpdateNotesRequest,
     UpdateProgressRequest,
 )
 from course_aggregator.services.analytics_service import AnalyticsService
 from course_aggregator.services.plan_service import PlanService
 from course_aggregator.storage.database import get_db_session
-from course_aggregator.storage.models import CourseModel, PlatformModel, TopicModel, course_topics
+from course_aggregator.storage.models import CourseModel, PlatformModel, TopicModel
 
 router = APIRouter(prefix="/api/v1")
 
@@ -49,12 +42,9 @@ async def list_courses(
     page: Annotated[int, Query(ge=1)] = 1,
     page_size: Annotated[int, Query(ge=1, le=100)] = 20,
 ) -> CoursePageResponse:
-    query = (
-        select(CourseModel)
-        .options(
-            selectinload(CourseModel.platform),
-            selectinload(CourseModel.topics),
-        )
+    query = select(CourseModel).options(
+        selectinload(CourseModel.platform),
+        selectinload(CourseModel.topics),
     )
 
     if q:
@@ -83,7 +73,12 @@ async def list_courses(
     )
 
 
-@router.post("/plan", response_model=PlanItemResponse, status_code=status.HTTP_201_CREATED, summary="Додавання курсу до плану")
+@router.post(
+    "/plan",
+    response_model=PlanItemResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Додавання курсу до плану",
+)
 async def add_to_plan(
     body: AddToPlanRequest,
     session: Annotated[AsyncSession, Depends(get_db_session)],
@@ -98,7 +93,9 @@ async def add_to_plan(
     return PlanItemResponse.model_validate(plan_item)
 
 
-@router.patch("/plan/{item_id}/progress", response_model=PlanItemResponse, summary="Оновлення прогресу")
+@router.patch(
+    "/plan/{item_id}/progress", response_model=PlanItemResponse, summary="Оновлення прогресу"
+)
 async def update_progress(
     item_id: UUID,
     body: UpdateProgressRequest,
@@ -133,7 +130,10 @@ async def get_topics_coverage(
     analytics = AnalyticsService(session)
     return await analytics.get_topics_coverage(user_id)
 
-@router.patch("/plan/{item_id}/notes", response_model=PlanItemResponse, summary="Оновлення нотаток до курсу")
+
+@router.patch(
+    "/plan/{item_id}/notes", response_model=PlanItemResponse, summary="Оновлення нотаток до курсу"
+)
 async def update_notes(
     item_id: UUID,
     body: UpdateNotesRequest,
@@ -145,7 +145,9 @@ async def update_notes(
     return PlanItemResponse.model_validate(updated)
 
 
-@router.delete("/plan/{item_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Видалення курсу з плану")
+@router.delete(
+    "/plan/{item_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Видалення курсу з плану"
+)
 async def remove_plan_item(
     item_id: UUID,
     session: Annotated[AsyncSession, Depends(get_db_session)],
